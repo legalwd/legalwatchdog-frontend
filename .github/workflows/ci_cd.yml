@@ -1,0 +1,388 @@
+name: Frontend CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - staging
+      - dev
+  pull_request:
+    branches:
+      - main
+      - staging
+      - dev
+
+jobs:
+  # ------------------------
+  # 1. BUILD JOB
+  # ------------------------
+  build:
+    name: Build Frontend
+    runs-on: emerj-runner
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Create .env file for staging
+        if: github.ref == 'refs/heads/staging' || (github.event_name == 'pull_request' && github.base_ref == 'staging')
+        run: |
+          cat <<EOF > .env
+          VITE_USE_MOCK_API=false
+          VITE_API_BASE_URL="${{ secrets.VITE_API_BASE_URL_STAGING }}"
+          VITE_APP_ENV=staging
+          EOF
+          echo ".env file created for staging"
+
+      - name: Create .env file for production
+        if: github.ref == 'refs/heads/main' || (github.event_name == 'pull_request' && github.base_ref == 'main')
+        run: |
+          cat <<EOF > .env
+          VITE_USE_MOCK_API=false
+          VITE_API_BASE_URL="${{ secrets.VITE_API_BASE_URL_PRODUCTION }}"
+          VITE_APP_ENV=production
+          EOF
+          echo ".env file created for production"
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Archive build output
+        run: |
+          # Create tarball with proper structure
+          mkdir -p deploy-package
+          cp -r dist/* deploy-package/
+          if [ -f .env ]; then
+            cp .env deploy-package/
+          fi
+          tar -czf build.tar.gz -C deploy-package .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: build.tar.gz
+
+  # -------------------------
+  # 2. DEPLOY TO STAGING
+  # -------------------------
+  deploy_staging:
+    name: CD - Frontend Deploy (Staging)
+    runs-on: emerj-runner
+    needs: build
+    if: |
+      (github.event_name == 'pull_request' && 
+       github.event.action == 'closed' && 
+       github.event.pull_request.merged == true && 
+       github.event.pull_request.base.ref == 'staging' && 
+       github.event.pull_request.head.ref == 'dev') ||
+      (github.event_name == 'push' && 
+       github.ref == 'refs/heads/staging')
+    environment: staging
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+
+      - name: Deploy to Staging
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_PATH: "/var/www/legalwatchdog-FE-staging"
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          # Create known_hosts file to avoid prompts
+          ssh-keyscan -H 34.254.58.85 >> ~/.ssh/known_hosts
+          
+          # Upload the tarball
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no build.tar.gz ubuntu@34.254.58.85:/tmp/
+          
+          # Execute deployment commands on server
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ubuntu@34.254.58.85 << 'EOF'
+            DEPLOY_PATH="/var/www/legalwatchdog-FE-staging/dist" 
+            TMP_DIR="/tmp/frontend-deploy-$(date +%s)"
+            
+            # Create temp directory for extraction
+            mkdir -p "$TMP_DIR"
+            
+            # Extract to temp directory
+            tar -xzf /tmp/build.tar.gz -C "$TMP_DIR"
+            
+            # Backup existing dist if needed
+            if [ -d "$DEPLOY_PATH" ]; then
+              BACKUP_DIR="/var/www/legalwatchdog-FE-staging/dist-backup-$(date +%Y%m%d-%H%M%S)"
+              cp -r "$DEPLOY_PATH" "$BACKUP_DIR"
+              echo "Backup created at: $BACKUP_DIR"
+            fi
+            
+            # Remove existing dist folder
+            sudo rm -rf "$DEPLOY_PATH"
+            
+            # Create dist directory
+            sudo mkdir -p "$DEPLOY_PATH"
+            
+            # Move new files to dist
+            sudo mv "$TMP_DIR"/* "$DEPLOY_PATH"/
+            
+            # Cleanup
+            rm -rf "$TMP_DIR" /tmp/build.tar.gz
+            
+            # Set proper permissions
+            sudo chown -R www-data:www-data "$DEPLOY_PATH"
+            sudo chmod -R 755 "$DEPLOY_PATH"
+            
+            # Verify deployment
+            echo "Deployment completed. Contents of $DEPLOY_PATH:"
+            ls -la "$DEPLOY_PATH"
+            
+            if [ -f "$DEPLOY_PATH/index.html" ]; then
+              echo "✅ index.html exists"
+            else
+              echo "❌ index.html NOT found!"
+              exit 1
+            fi
+          EOF
+
+      - name: Verify Deployment
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ubuntu@34.254.58.85 << 'EOF'
+            DEPLOY_PATH="/var/www/legalwatchdog-FE-staging"
+            echo "=== Verification ==="
+            echo "Deploy path: $DEPLOY_PATH"
+            echo "Current directory: $(pwd)"
+            echo "Directory contents:"
+            ls -la "$DEPLOY_PATH" || echo "Cannot list directory"
+            echo "Dist contents:"
+            ls -la "$DEPLOY_PATH/dist" 2>/dev/null || echo "dist directory not found"
+            echo "=== End Verification ==="
+          EOF
+
+  # ------------------------
+  # 3. DEPLOY TO PRODUCTION
+  # ------------------------
+  deploy_production:
+    name: CD - Frontend Deploy (Production)
+    runs-on: emerj-runner
+    needs: build
+    if: |
+      (github.event_name == 'pull_request' && 
+       github.event.action == 'closed' && 
+       github.event.pull_request.merged == true && 
+       github.event.pull_request.base.ref == 'main' && 
+       github.event.pull_request.head.ref == 'staging') ||
+      (github.event_name == 'push' && 
+       github.ref == 'refs/heads/main')
+    environment: production
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+
+      - name: Deploy to Production
+        env:
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          DEPLOY_PATH: "/var/www/legalwatchdog-FE-prod"
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          
+          ssh-keyscan -H 34.254.58.85 >> ~/.ssh/known_hosts
+          
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no build.tar.gz ubuntu@34.254.58.85:/tmp/
+    
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ubuntu@34.254.58.85 << 'EOF'
+            set -e  # ← Exit on any error
+            
+            DIST_PATH="/var/www/legalwatchdog-FE-prod/dist"
+            TMP_DIR="/tmp/frontend-prod-deploy-$(date +%s)"
+            
+            echo "📦 Extracting build..."
+            mkdir -p "$TMP_DIR"
+            tar -xzf /tmp/build.tar.gz -C "$TMP_DIR"
+            
+            echo "💾 Creating backup..."
+            if [ -d "$DIST_PATH" ]; then
+              BACKUP_DIR="/var/www/legalwatchdog-FE-prod/dist-backup-$(date +%Y%m%d-%H%M%S)"
+              sudo cp -r "$DIST_PATH" "$BACKUP_DIR"  # ← Added sudo
+              echo "✅ Backup created: $BACKUP_DIR"
+            fi
+            
+            echo "🗑️  Removing old deployment..."
+            sudo rm -rf "$DIST_PATH"
+            sudo mkdir -p "$DIST_PATH"
+            
+            echo "🚀 Deploying new files..."
+            sudo mv "$TMP_DIR"/* "$DIST_PATH"/
+            
+            echo "🔐 Setting permissions..."
+            sudo chown -R www-data:www-data "$DIST_PATH"
+            sudo chmod -R 755 "$DIST_PATH"
+            
+            echo "🧹 Cleaning up..."
+            rm -rf "$TMP_DIR" /tmp/build.tar.gz
+            
+            echo "✅ Production deployment completed!"
+            echo "Files deployed: $(find "$DIST_PATH" -type f | wc -l)"
+            
+            # Verify critical files exist
+            if [ ! -f "$DIST_PATH/index.html" ]; then
+              echo "❌ ERROR: index.html not found!"
+              exit 1
+            fi
+            
+            if [ ! -d "$DIST_PATH/assets" ]; then
+              echo "⚠️  WARNING: assets folder not found!"
+            fi
+            
+            echo "✅ Verification passed!"
+          EOF
+      - name: Test Production Site
+        if: success()
+        run: |
+          echo "🧪 Testing production site..."
+          sleep 3  # Give nginx a moment
+          
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://legalwatch.dog)
+          
+          if [ "$HTTP_CODE" == "200" ]; then
+            echo "✅ Production site is accessible (HTTP $HTTP_CODE)"
+          else
+            echo "❌ Production site returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+
+  # -------------------------
+  # 4. Slack Notification
+  # -------------------------
+  notify_slack:
+    name: Notify Slack
+    runs-on: emerj-runner
+    needs:
+      - build
+      - deploy_staging
+      - deploy_production
+    if: always()
+    steps:
+      - name: Send Slack Notification
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          STAGING_RESULT: ${{ needs.deploy_staging.result }}
+          PROD_RESULT: ${{ needs.deploy_production.result }}
+        run: |
+          echo "Preparing Slack message..."
+
+          # Get branch name or PR info
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            BRANCH_NAME="${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}"
+          else
+            BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          fi
+          
+          # Determine high-level outcome and set appropriate emoji
+          if [ "$BUILD_RESULT" == "success" ] && ([ "$STAGING_RESULT" == "success" ] || [ "$STAGING_RESULT" == "skipped" ]) && ([ "$PROD_RESULT" == "success" ] || [ "$PROD_RESULT" == "skipped" ]); then
+            MAIN_STATUS="✅ Deployment Successful"
+            STATUS_COLOR="good"
+          else
+            MAIN_STATUS="❌ Deployment Failed"
+            STATUS_COLOR="danger"
+          fi
+
+          # Build detailed status for each stage
+          DETAIL_MSG=""
+
+          # Build Stage
+          if [ "$BUILD_RESULT" == "success" ]; then
+            DETAIL_MSG="${DETAIL_MSG}\n✅ *Build:* Application built successfully"
+          else
+            DETAIL_MSG="${DETAIL_MSG}\n❌ *Build:* Failed to build application"
+          fi
+
+          # Staging Deploy Stage
+          if [ "$STAGING_RESULT" == "success" ]; then
+            DETAIL_MSG="${DETAIL_MSG}\n✅ *Test Environment:* Successfully deployed to staging server"
+          elif [ "$STAGING_RESULT" == "skipped" ]; then
+            DETAIL_MSG="${DETAIL_MSG}\n⏭️ *Test Environment:* Skipped (not deploying to staging)"
+          else
+            DETAIL_MSG="${DETAIL_MSG}\n❌ *Test Environment:* Failed to deploy to staging server"
+          fi
+
+          # Production Deploy Stage
+          if [ "$PROD_RESULT" == "success" ]; then
+            DETAIL_MSG="${DETAIL_MSG}\n✅ *Live Website:* Successfully deployed to production server"
+          elif [ "$PROD_RESULT" == "skipped" ]; then
+            DETAIL_MSG="${DETAIL_MSG}\n⏭️ *Live Website:* Skipped (not deploying to production)"
+          else
+            DETAIL_MSG="${DETAIL_MSG}\n❌ *Live Website:* Failed to deploy to production server"
+          fi
+
+          # Add branch info
+          DETAIL_MSG="${DETAIL_MSG}\n\n📋 *Branch:* \`${BRANCH_NAME}\`"
+          DETAIL_MSG="${DETAIL_MSG}\n👤 *Triggered by:* ${GITHUB_ACTOR}"
+
+          LOG_LINK="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+          # Format Slack JSON with rich formatting
+          PAYLOAD="{
+            \"attachments\": [
+              {
+                \"color\": \"${STATUS_COLOR}\",
+                \"blocks\": [
+                  {
+                    \"type\": \"header\",
+                    \"text\": {
+                      \"type\": \"plain_text\",
+                      \"text\": \"🚀 Frontend Deployment Update\",
+                      \"emoji\": true
+                    }
+                  },
+                  {
+                    \"type\": \"section\",
+                    \"text\": {
+                      \"type\": \"mrkdwn\",
+                      \"text\": \"*${MAIN_STATUS}*${DETAIL_MSG}\"
+                    }
+                  },
+                  {
+                    \"type\": \"divider\"
+                  },
+                  {
+                    \"type\": \"section\",
+                    \"text\": {
+                      \"type\": \"mrkdwn\",
+                      \"text\": \"Need help? Check the <${LOG_LINK}|detailed logs> or contact the development team.\"
+                    }
+                  }
+                ]
+              }
+            ]
+          }"
+
+          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" $SLACK_WEBHOOK

@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './typography.css';
+@import './theme.css';
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--color-border);
+  }
+
+  body {
+    @apply font-sans;
+    background-color: var(--color-page-bg);
+    color: var(--color-foreground);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+
+  p {
+    color: var(--color-muted);
+  }
+
+  #app {
+    min-height: 100vh;
+  }
+
+  a {
+    @apply text-inherit no-underline;
+  }
+  a,
+  button,
+  input,
+  textarea {
+    @apply focus-visible:ring-accent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
+  }
+}
+
+@utility container--wide {
+  @apply m-auto w-full max-w-300;
+}
+
+.app-container {
+  @apply mx-auto w-full max-w-300 px-4;
+}
+
+@utility profile-list-card {
+  @apply border-border bg-muted-background rounded-md border p-4;
+}
+
+@utility text-preset-display-lg {
+  @apply font-sans text-[48px] leading-[1.3] font-semibold tracking-normal;
+}
+
+@utility text-preset-display-md {
+  @apply font-sans text-[60px] leading-[100%] font-bold tracking-[-4%];
+}
+
+@utility text-preset-display-sm {
+  @apply font-sans text-[48px] leading-14 font-semibold tracking-[-2%];
+}
+@utility text-preset-heading-lg {
+  @apply font-sans text-[36px] leading-[100%] font-semibold tracking-[0%];
+}
+
+@utility text-preset-heading-md {
+  @apply font-sans text-[32px] leading-normal font-semibold tracking-normal;
+}
+
+@utility text-preset-heading-sm {
+  @apply font-sans text-[24px] leading-[1.4] font-semibold tracking-normal;
+}
+
+@utility text-preset-label-lg {
+  @apply font-sans text-[30px] leading-[1.4] font-semibold tracking-tighter;
+}
+
+@utility text-preset-label-md {
+  @apply font-sans text-[20px] leading-[1.4] font-medium tracking-normal;
+}
+
+@utility text-preset-label-sm {
+  @apply font-sans text-[10px] leading-[1.4] font-medium tracking-tighter;
+}
+
+@utility text-preset-body-xx-lg {
+  @apply font-sans text-[24px] leading-9 font-medium tracking-[0%];
+}
+
+@utility text-preset-body-lg {
+  @apply font-sans text-[18px] leading-normal font-medium tracking-normal;
+}
+
+@utility text-preset-body-md {
+  @apply font-sans text-[16px] leading-normal font-normal tracking-normal;
+}
+
+@utility text-preset-body-sm {
+  @apply font-sans text-[14px] leading-normal font-normal tracking-normal;
+}
+
+@utility text-preset-link-lg {
+  @apply font-sans text-[14px] leading-normal font-medium tracking-wide;
+}
+
+@utility text-preset-link-md {
+  @apply font-sans text-[12px] leading-normal font-medium tracking-wide;
+}
+
+@utility text-preset-link-sm {
+  @apply font-sans text-[10px] leading-normal font-medium tracking-wide;
+}
+
+@utility btn {
+  @apply cursor-pointer rounded-sm text-center disabled:cursor-not-allowed;
+}
+
+@utility btn--sm {
+  @apply px-3 py-2;
+}
+
+@utility btn--md {
+  @apply px-4 py-2.5;
+}
+
+@utility btn--lg {
+  @apply px-4.5 py-3;
+}
+
+@utility btn--xl {
+  @apply px-5 py-4;
+}
+
+@utility btn--icon-sm {
+  @apply p-2;
+}
+
+@utility btn--icon-md {
+  @apply p-2.5;
+}
+
+@utility btn--icon-lg {
+  @apply p-3;
+}
+
+@utility btn--icon-xl {
+  @apply p-4;
+}
+
+@utility btn--full {
+  @apply w-full;
+}
+
+@utility btn--compact {
+  @apply w-auto self-start;
+}
+
+@utility btn--default {
+  @apply btn bg-primary hover:bg-accent-subtle text-bg disabled:bg-disabled-background disabled:text-disabled;
+}
+
+@utility btn--secondary {
+  @apply btn text-primary border-primary hover:text-accent-subtle hover:border-accent-subtle border bg-transparent;
+}
+
+@utility btn--contrast {
+  @apply btn bg-background hover:bg-primary text-primary border hover:text-white;
+}
+
+@utility btn--danger {
+  @apply btn text-destructive border-destructive hover:bg-destructive hover:text-destructive-fg border bg-transparent;
+}
+
+@utility btn--with-icon {
+  @apply btn flex items-center justify-center gap-2;
+}
+
+@utility btn--link {
+  @apply btn text-primary underline hover:no-underline;
+}
+
+@utility btn--disabled {
+  @apply disabled:text-disabled disabled:bg-disabled-background disabled:cursor-not-allowed;
+}
+
+@utility link--disabled {
+  @apply disabled:cursor-not-allowed;
+}
+
+@utility btn--icon-only {
+  @apply rounded-full;
+}
+
+@utility project-card {
+  @apply bg-background border-border hover:border-border/60 cursor-pointer space-y-3 rounded-xl border p-6 transition-shadow duration-200 hover:shadow-sm;
+}
+
+@utility project-card__title {
+  @apply text-foreground text-lg font-semibold;
+}
+
+@utility project-card__description {
+  @apply text-muted text-sm leading-relaxed;
+}
+
+@utility project-status {
+  @apply flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm font-medium disabled:cursor-not-allowed;
+}
+
+@utility project-status--success {
+  @apply bg-success-background text-success;
+}
+
+@utility project-status--minor {
+  @apply bg-yellow-50 text-yellow-700;
+}
+
+@utility project-status--major {
+  @apply bg-error-background text-error;
+}
+
+@utility project-change-list {
+  @apply bg-error-background/60 rounded-lg px-4 py-3;
+}
+
+@utility project-change-toggle {
+  @apply text-muted flex items-center;
+}
+
+@utility project-status--interactive {
+  @apply cursor-pointer;
+}
+
+@utility project-change-link {
+  @apply text-primary mt-3 text-sm font-medium;
+}
+
+@utility skeleton-line {
+  @apply bg-muted/50 animate-pulse rounded;
+}
+
+@utility single-project-card {
+  @apply bg-background border-border rounded-2xl border p-6;
+}
+
+@utility single-project-back-button {
+  @apply border-border bg-background text-foreground hover:bg-muted-background flex h-9 w-9 items-center justify-center rounded-md border transition;
+}
+
+@utility single-project-icon-button {
+  @apply border-border bg-background text-foreground hover:bg-muted-background flex h-10 w-10 items-center justify-center rounded-lg border transition;
+}
+
+@utility single-project-empty-card {
+  @apply border-border bg-background flex flex-col items-center justify-center rounded-2xl border px-6 py-12 text-center;
+}
+
+@utility single-project-empty-icon {
+  @apply border-muted bg-muted-background text-muted mb-4 flex items-center justify-center rounded-full border-2 p-4;
+}
+
+@utility project-instruction-modal {
+  @apply border-border rounded-2xl border p-6 sm:max-w-2xl sm:p-8;
+}
+
+@utility project-instruction-textarea {
+  @apply border-border bg-background text-foreground placeholder:text-muted focus:border-accent min-h-40 w-full resize-none rounded-lg border px-4 py-3 text-sm leading-relaxed;
+}
+
+@utility single-project-jurisdiction-list {
+  @apply border-border bg-background divide-border cursor-pointer divide-y overflow-hidden rounded-2xl border;
+}
+
+@utility single-project-jurisdiction-row {
+  @apply border-border/60 flex flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between;
+}
+
+@utility single-project-jurisdiction-item {
+  @apply hover:bg-muted-background/40 w-full flex-1 cursor-pointer text-left transition;
+}
+
+@utility single-project-jurisdiction-title {
+  @apply text-foreground text-base font-semibold;
+}
+
+@utility single-project-jurisdiction-description {
+  @apply text-muted text-sm;
+}
+
+@utility single-project-jurisdiction-meta {
+  @apply text-muted text-sm;
+}
+
+@utility single-project-jurisdiction-status {
+  @apply flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@utility single-project-jurisdiction-status--major {
+  @apply bg-error-background text-error;
+}
+
+@utility single-project-jurisdiction-status--minor {
+  @apply bg-yellow-50 text-yellow-700;
+}
+
+@utility single-project-jurisdiction-status--clear {
+  @apply bg-success-background text-success;
+}
+
+@utility single-project-jurisdiction-revisions {
+  @apply border-border/60 bg-muted-background/30 border-t px-6 pt-4 pb-6;
+}

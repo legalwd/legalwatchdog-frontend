@@ -1,0 +1,271 @@
+@import 'tailwindcss';
+@import '../styles/theme.css';
+
+/*
+  LegalWatch Blog Styles v1
+  Stable CSS contract for backend-generated static blog pages.
+  Scope: styles apply only when the page root has class="lwd-blog".
+*/
+
+:root {
+  --lwd-font-sans: var(--font-sans);
+
+  --lwd-color-page-bg: var(--color-page-bg);
+  --lwd-color-surface: var(--color-background);
+  --lwd-color-text: var(--color-foreground);
+  --lwd-color-text-muted: var(--color-muted);
+  --lwd-color-border: var(--color-border);
+  --lwd-color-brand: var(--color-primary);
+  --lwd-color-accent: var(--color-accent);
+  --lwd-color-code-bg: var(--color-muted-background);
+  --lwd-color-table-head-bg: var(--color-muted-background);
+
+  --lwd-radius-sm: var(--radius-sm);
+  --lwd-radius-md: var(--radius-lg);
+  --lwd-radius-lg: var(--radius-xl);
+
+  --lwd-space-1: 0.25rem;
+  --lwd-space-2: 0.5rem;
+  --lwd-space-3: 0.75rem;
+  --lwd-space-4: 1rem;
+  --lwd-space-5: 1.25rem;
+  --lwd-space-6: 1.5rem;
+  --lwd-space-8: 2rem;
+  --lwd-space-10: 2.5rem;
+}
+
+.lwd-blog {
+  margin: 0;
+  font-family: var(--lwd-font-sans);
+  background: var(--lwd-color-page-bg);
+  color: var(--lwd-color-text);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.lwd-blog *,
+.lwd-blog *::before,
+.lwd-blog *::after {
+  box-sizing: border-box;
+}
+
+.lwd-blog .blog-post-container {
+  width: 100%;
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: var(--lwd-space-10) var(--lwd-space-4);
+}
+
+.lwd-blog .blog-post {
+  background: var(--lwd-color-surface);
+  border: 1px solid var(--lwd-color-border);
+  border-radius: var(--lwd-radius-lg);
+  padding: var(--lwd-space-8);
+}
+
+.lwd-blog .blog-post__header {
+  border-bottom: 1px solid var(--lwd-color-border);
+  margin-bottom: var(--lwd-space-8);
+  padding-bottom: var(--lwd-space-5);
+}
+
+.lwd-blog .blog-post__title {
+  margin: 0;
+  color: var(--lwd-color-brand);
+  font-size: clamp(1.875rem, 2.5vw, 2.5rem);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.lwd-blog .blog-post__date {
+  display: inline-block;
+  margin-top: var(--lwd-space-3);
+  color: var(--lwd-color-text-muted);
+  font-size: 0.95rem;
+}
+
+.lwd-blog .blog-post__content {
+  color: var(--lwd-color-text);
+}
+
+.lwd-blog .blog-post__content > *:first-child {
+  margin-top: 0;
+}
+
+.lwd-blog .blog-post__content > *:last-child {
+  margin-bottom: 0;
+}
+
+.lwd-blog .blog-post__content h1,
+.lwd-blog .blog-post__content h2,
+.lwd-blog .blog-post__content h3,
+.lwd-blog .blog-post__content h4,
+.lwd-blog .blog-post__content h5,
+.lwd-blog .blog-post__content h6 {
+  margin: var(--lwd-space-8) 0 var(--lwd-space-4);
+  color: var(--lwd-color-brand);
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.lwd-blog .blog-post__content h1 {
+  font-size: 1.9rem;
+}
+
+.lwd-blog .blog-post__content h2 {
+  font-size: 1.6rem;
+}
+
+.lwd-blog .blog-post__content h3 {
+  font-size: 1.35rem;
+}
+
+.lwd-blog .blog-post__content h4 {
+  font-size: 1.15rem;
+}
+
+.lwd-blog .blog-post__content p {
+  margin: 0 0 var(--lwd-space-5);
+  color: var(--lwd-color-text);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.lwd-blog .blog-post__content a {
+  color: var(--lwd-color-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.lwd-blog .blog-post__content a:hover {
+  color: var(--lwd-color-accent);
+}
+
+.lwd-blog .blog-post__content ul,
+.lwd-blog .blog-post__content ol {
+  margin: 0 0 var(--lwd-space-5);
+  padding-left: var(--lwd-space-6);
+}
+
+.lwd-blog .blog-post__content li {
+  margin-bottom: var(--lwd-space-2);
+  line-height: 1.7;
+}
+
+.lwd-blog .blog-post__content blockquote {
+  margin: 0 0 var(--lwd-space-5);
+  padding: var(--lwd-space-4) var(--lwd-space-5);
+  border-left: 4px solid var(--lwd-color-accent);
+  background: #fffbf7;
+  color: var(--lwd-color-text-muted);
+  border-radius: 0 var(--lwd-radius-sm) var(--lwd-radius-sm) 0;
+}
+
+.lwd-blog .blog-post__content hr {
+  border: 0;
+  border-top: 1px solid var(--lwd-color-border);
+  margin: var(--lwd-space-8) 0;
+}
+
+.lwd-blog .blog-post__content code {
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  font-size: 0.9em;
+  background: var(--lwd-color-code-bg);
+  border: 1px solid var(--lwd-color-border);
+  border-radius: 6px;
+  padding: 0.15em 0.35em;
+}
+
+.lwd-blog .blog-post__content pre {
+  margin: 0 0 var(--lwd-space-5);
+  background: var(--lwd-color-code-bg);
+  border: 1px solid var(--lwd-color-border);
+  border-radius: var(--lwd-radius-md);
+  padding: var(--lwd-space-4);
+  overflow-x: auto;
+}
+
+.lwd-blog .blog-post__content pre code {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.lwd-blog .blog-post__content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 var(--lwd-space-6);
+  border: 1px solid var(--lwd-color-border);
+  border-radius: var(--lwd-radius-md);
+  overflow: hidden;
+}
+
+.lwd-blog .blog-post__content thead {
+  background: var(--lwd-color-table-head-bg);
+}
+
+.lwd-blog .blog-post__content th,
+.lwd-blog .blog-post__content td {
+  text-align: left;
+  padding: var(--lwd-space-3) var(--lwd-space-4);
+  border-bottom: 1px solid var(--lwd-color-border);
+  vertical-align: top;
+}
+
+.lwd-blog .blog-post__content th {
+  color: var(--lwd-color-brand);
+  font-weight: 600;
+}
+
+.lwd-blog .blog-post__content tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.lwd-blog .blog-post__content img,
+.lwd-blog .blog-post__content video,
+.lwd-blog .blog-post__content iframe {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--lwd-radius-md);
+  margin: var(--lwd-space-4) 0 var(--lwd-space-6);
+}
+
+@media (max-width: 768px) {
+  .lwd-blog .blog-post-container {
+    padding: var(--lwd-space-6) var(--lwd-space-3);
+  }
+
+  .lwd-blog .blog-post {
+    border-radius: var(--lwd-radius-md);
+    padding: var(--lwd-space-5);
+  }
+
+  .lwd-blog .blog-post__title {
+    font-size: clamp(1.6rem, 7vw, 2rem);
+  }
+
+  .lwd-blog .blog-post__content h1 {
+    font-size: 1.6rem;
+  }
+
+  .lwd-blog .blog-post__content h2 {
+    font-size: 1.4rem;
+  }
+
+  .lwd-blog .blog-post__content h3 {
+    font-size: 1.2rem;
+  }
+
+  .lwd-blog .blog-post__content table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

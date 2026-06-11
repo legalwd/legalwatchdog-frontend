@@ -1,0 +1,164 @@
+:root {
+  /* Core palette */
+  --token-brand-main: #401903;
+  --token-brand-50: #fffbeb;
+  --token-brand-100: #fef4c7;
+  --token-brand-200: #fde78a;
+  --token-brand-300: #fbd54e;
+  --token-brand-400: #fac225;
+  --token-brand-500: #f4a10c;
+  --token-brand-600: #d87a07;
+  --token-brand-700: #b3550a;
+  --token-brand-800: #92420e;
+  --token-brand-850: #3c2610;
+
+  --token-peach-amber-main: #f2ab6d;
+  --token-peach-amber-50: #fff6f0;
+  --token-peach-amber-100: #fcebd8;
+  --token-peach-amber-200: #f1a75f;
+  --token-peach-amber-300: #ee8c49;
+  --token-peach-amber-400: #e96d26;
+  --token-peach-amber-500: #db541b;
+  --token-peach-amber-600: #b53f19;
+  --token-peach-amber-700: #91341b;
+  --token-peach-amber-800: #752d19;
+  --token-peach-amber-850: #3f140b;
+
+  --token-red-main: #f04438;
+  --token-red-50: #fef3f2;
+  --token-red-100: #fee4e2;
+  --token-red-200: #fecdca;
+  --token-red-300: #fda29b;
+  --token-red-400: #f97066;
+  --token-red-500: #d92d20;
+  --token-red-600: #b42318;
+  --token-red-700: #912018;
+  --token-red-800: #7a271a;
+  --token-red-850: #450a0a;
+
+  --token-gray-white: #ffffff;
+  --token-gray-50: #f8f8f8;
+  --token-gray-100: #fbfbfb;
+  --token-gray-200: #e5e7eb;
+  --token-gray-300: #d1d5db;
+  --token-gray-400: #9ca3af;
+  --token-gray-500: #6b7280;
+  --token-gray-600: #4b5563;
+  --token-gray-700: #374151;
+  --token-gray-800: #1f2937;
+  --token-gray-850: #111827;
+  --token-gray-950: #272727;
+  --token-gray-black: #1f1f1f;
+
+  --token-yellow-main: #f59e0b;
+  --token-yellow-50: #fffbeb;
+  --token-yellow-100: #fef3c7;
+  --token-yellow-200: #fdd28a;
+  --token-yellow-300: #fcbb4d;
+  --token-yellow-400: #fbab24;
+  --token-yellow-500: #d98b06;
+  --token-yellow-600: #b47409;
+  --token-yellow-700: #92610e;
+  --token-yellow-800: #78510f;
+  --token-yellow-850: #451a03;
+
+  --token-green-main: #24d64e;
+  --token-green-50: #f0fdf2;
+  --token-green-100: #dcfce3;
+  --token-green-200: #bbf7c8;
+  --token-green-300: #86ef9e;
+  --token-green-400: #49df6c;
+  --token-green-500: #15a437;
+  --token-green-600: #15802f;
+  --token-green-700: #16652a;
+  --token-green-800: #145325;
+  --token-green-850: #052e11;
+
+  --token-orange-main: #ff7043;
+  --token-orange-50: #fff3ed;
+  --token-orange-100: #ffe4d4;
+  --token-orange-200: #ffc5a8;
+  --token-orange-300: #ff9c71;
+  --token-orange-400: #fe4011;
+  --token-orange-500: #ef2607;
+  --token-orange-600: #c61708;
+  --token-orange-700: #9d150f;
+  --token-orange-800: #7e1510;
+  --token-orange-850: #440606;
+
+  --stroke: #e1e1e1;
+
+  /* Spacing scale */
+  --token-size-0: 0px;
+  --token-size-1: 1px;
+  --token-size-4: 4px;
+  --token-size-8: 8px;
+  --token-size-12: 12px;
+  --token-size-16: 16px;
+  --token-size-20: 20px;
+  --token-size-24: 24px;
+  --token-size-28: 28px;
+  --token-size-32: 32px;
+  --token-size-40: 40px;
+  --token-size-48: 48px;
+  --token-size-56: 56px;
+  --token-size-64: 64px;
+  --token-size-96: 96px;
+  --token-size-100: 100px;
+  --token-size-128: 128px;
+  --token-size-256: 256px;
+
+  /* Typography + radii */
+  --token-font-body: 'Inter';
+  --token-font-title: 'Inter';
+  --token-font-weight-regular: 400;
+  --token-font-weight-medium: 500;
+  --token-font-weight-semibold: 600;
+  --token-font-weight-bold: 700;
+
+  --token-font-stack-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+
+  --token-radius-base: 12px;
+  --token-radius-sm: 8px;
+  --token-radius-md: 10px;
+  --token-radius-lg: 12px;
+  --token-radius-xl: 16px;
+
+  /* Semantic surface tokens */
+  --surface-card: var(--token-gray-white);
+  --surface-card-foreground: var(--token-gray-950);
+  --surface-muted-background: var(--token-gray-100);
+  --surface-destructive: var(--red-600);
+
+  /* To be removed ⬇️ */
+  --surface-background: var(--gray-50);
+  --surface-foreground: var(--gray-850);
+  --surface-popover: var(--gray-white);
+  --surface-popover-foreground: var(--gray-950);
+  --surface-primary: var(--brand-main);
+  --surface-primary-foreground: var(--gray-white);
+  --surface-secondary: var(--peach-amber-50);
+  --surface-secondary-foreground: var(--brand-700);
+  --surface-muted: var(--gray-100);
+  --surface-accent: var(--peach-amber-300);
+  --surface-accent-foreground: var(--brand-800);
+  --surface-destructive-foreground: var(--gray-white);
+  --surface-border: var(--gray-200);
+  --surface-input: var(--gray-200);
+  --surface-ring: var(--brand-400);
+  --surface-chart-1: var(--peach-amber-400);
+  --surface-chart-2: var(--orange-400);
+  --surface-chart-3: var(--green-main);
+  --surface-chart-4: var(--yellow-400);
+  --surface-chart-5: var(--red-400);
+  --surface-sidebar: var(--gray-white);
+  --surface-sidebar-foreground: var(--gray-850);
+  --surface-sidebar-primary: var(--brand-main);
+  --surface-sidebar-primary-foreground: var(--gray-white);
+  --surface-sidebar-accent: var(--peach-amber-100);
+  --surface-sidebar-accent-foreground: var(--brand-700);
+  --surface-sidebar-border: var(--gray-200);
+  --surface-sidebar-ring: var(--brand-400);
+}

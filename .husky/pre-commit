@@ -1,0 +1,43 @@
+set -e
+
+# Ensure hook runs with project Node version when nvm is available.
+if [ -z "${NVM_DIR:-}" ]; then
+  export NVM_DIR="$HOME/.nvm"
+fi
+
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  # shellcheck disable=SC1090
+  . "$NVM_DIR/nvm.sh"
+  nvm use >/dev/null 2>&1 || true
+fi
+
+required_node="20.19.0"
+current_node="$(node -v 2>/dev/null | sed 's/^v//')"
+
+if [ -z "$current_node" ]; then
+  echo "Node.js is not available in PATH. Required: >= $required_node"
+  exit 1
+fi
+
+if [ "$(printf '%s\n' "$required_node" "$current_node" | sort -V | tail -n1)" != "$current_node" ]; then
+  echo "Node.js v$current_node is too old for this repo. Required: >= $required_node"
+  echo "Tip: run 'nvm use' (or install Node $required_node+) and retry commit."
+  exit 1
+fi
+
+PNPM_CMD="pnpm"
+if command -v corepack >/dev/null 2>&1; then
+  PNPM_CMD="corepack pnpm"
+fi
+
+echo "Running lint-staged (eslint, prettier, vitest on changed files)..."
+$PNPM_CMD exec lint-staged
+
+echo "Type checking..."
+$PNPM_CMD run type-check
+
+echo "Running unit tests..."
+$PNPM_CMD run test:unit:run
+
+echo "Building..."
+$PNPM_CMD run build

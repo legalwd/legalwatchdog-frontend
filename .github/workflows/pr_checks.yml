@@ -1,0 +1,42 @@
+name: PR Quality Checks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+      - dev
+
+jobs:
+  quality:
+    name: Lint / Format / Typecheck / Test
+    runs-on: emerj-runner
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint:strict
+
+      - name: Type check
+        run: pnpm type-check
+
+      - name: Unit tests
+        run: pnpm test:unit:run

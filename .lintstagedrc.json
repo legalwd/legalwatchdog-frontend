@@ -1,0 +1,12 @@
+{
+  "*.{js,jsx,ts,tsx,vue}": [
+    "eslint --cache",
+    "prettier --check"
+  ],
+  "*.{json,md,css,html}": [
+    "prettier --check"
+  ],
+  "*.{ts,tsx,vue}": [
+    "vitest related --run"
+  ]
+}

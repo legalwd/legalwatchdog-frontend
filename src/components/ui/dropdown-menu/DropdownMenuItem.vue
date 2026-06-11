@@ -1,0 +1,44 @@
+<script setup lang="ts">
+import { reactiveOmit } from '@vueuse/core'
+import type { DropdownMenuItemProps } from 'reka-ui'
+import { DropdownMenuItem, useForwardProps } from 'reka-ui'
+import { computed, type HTMLAttributes } from 'vue'
+
+import { cn, filterUndefined } from '@/lib/utils'
+
+const props = withDefaults(
+  defineProps<
+    DropdownMenuItemProps & {
+      class?: HTMLAttributes['class']
+      inset?: boolean
+      variant?: 'default' | 'destructive'
+    }
+  >(),
+  {
+    variant: 'default',
+  },
+)
+
+const delegatedProps = computed(() =>
+  filterUndefined(reactiveOmit(props, 'inset', 'variant', 'class')),
+)
+
+const forwardedProps = useForwardProps(delegatedProps)
+</script>
+
+<template>
+  <DropdownMenuItem
+    data-slot="dropdown-menu-item"
+    :data-inset="inset ? '' : undefined"
+    :data-variant="variant"
+    v-bind="forwardedProps"
+    :class="
+      cn(
+        'data-[variant=destructive]:*:[svg]:text-destructive! relative flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-neutral-100 focus:text-neutral-900 data-disabled:pointer-events-none data-disabled:opacity-50 data-inset:pl-8 data-[variant=destructive]:text-red-500 data-[variant=destructive]:focus:bg-red-500/10 data-[variant=destructive]:focus:text-red-500 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 [&_svg:not([class*=\'text-\'])]:text-neutral-500',
+        props.class,
+      )
+    "
+  >
+    <slot />
+  </DropdownMenuItem>
+</template>

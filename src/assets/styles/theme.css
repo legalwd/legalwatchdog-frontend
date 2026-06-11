@@ -1,0 +1,167 @@
+@import './tokens.css';
+
+@theme {
+  /* Typography */
+  --font-sans: var(--token-font-stack-sans);
+  --font-title: var(--token-font-title);
+  --font-body: var(--token-font-body);
+  --font-weight-regular: var(--token-font-weight-regular);
+  --font-weight-medium: var(--token-font-weight-medium);
+  --font-weight-semibold: var(--token-font-weight-semibold);
+  --font-weight-bold: var(--token-font-weight-bold);
+
+  /* Radius */
+  --radius-DEFAULT: var(--token-radius-base);
+  --radius-sm: var(--token-radius-sm);
+  --radius-md: var(--token-radius-md);
+  --radius-lg: var(--token-radius-lg);
+  --radius-xl: var(--token-radius-xl);
+
+  --color-peach-amber-main: var(--token-peach-amber-main);
+  --color-peach-amber-50: var(--token-peach-amber-50);
+  --color-peach-amber-100: var(--token-peach-amber-100);
+  --color-peach-amber-200: var(--token-peach-amber-200);
+  --color-peach-amber-300: var(--token-peach-amber-300);
+  --color-peach-amber-400: var(--token-peach-amber-400);
+  --color-peach-amber-500: var(--token-peach-amber-500);
+  --color-peach-amber-600: var(--token-peach-amber-600);
+  --color-peach-amber-700: var(--token-peach-amber-700);
+  --color-peach-amber-800: var(--token-peach-amber-800);
+  --color-peach-amber-850: var(--token-peach-amber-850);
+
+  --color-red-main: var(--token-red-main);
+  --color-red-50: var(--token-red-50);
+  --color-red-100: var(--token-red-100);
+  --color-red-200: var(--token-red-200);
+  --color-red-300: var(--token-red-300);
+  --color-red-400: var(--token-red-400);
+  --color-red-500: var(--token-red-500);
+  --color-red-600: var(--token-red-600);
+  --color-red-700: var(--token-red-700);
+  --color-red-800: var(--token-red-800);
+  --color-red-850: var(--token-red-850);
+
+  --color-gray-white: var(--token-gray-white);
+  --color-gray-50: var(--token-gray-50);
+  --color-gray-100: var(--token-gray-100);
+  --color-gray-200: var(--token-gray-200);
+  --color-gray-300: var(--token-gray-300);
+  --color-gray-400: var(--token-gray-400);
+  --color-gray-500: var(--token-gray-500);
+  --color-gray-600: var(--token-gray-600);
+  --color-gray-700: var(--token-gray-700);
+  --color-gray-800: var(--token-gray-800);
+  --color-gray-850: var(--token-gray-850);
+  --color-gray-950: var(--token-gray-950);
+  --color-gray-black: var(--token-gray-black);
+
+  --color-brand-main: var(--token-brand-main);
+  --color-brand-50: var(--token-brand-50);
+  --color-brand-100: var(--token-brand-100);
+  --color-brand-200: var(--token-brand-200);
+  --color-brand-300: var(--token-brand-300);
+  --color-brand-400: var(--token-brand-400);
+  --color-brand-500: var(--token-brand-500);
+  --color-brand-600: var(--token-brand-600);
+  --color-brand-700: var(--token-brand-700);
+  --color-brand-800: var(--token-brand-800);
+  --color-brand-850: var(--token-brand-850);
+
+  --color-yellow-main: var(--token-yellow-main);
+  --color-yellow-50: var(--token-yellow-50);
+  --color-yellow-100: var(--token-yellow-100);
+  --color-yellow-200: var(--token-yellow-200);
+  --color-yellow-300: var(--token-yellow-300);
+  --color-yellow-400: var(--token-yellow-400);
+  --color-yellow-500: var(--token-yellow-500);
+  --color-yellow-600: var(--token-yellow-600);
+  --color-yellow-700: var(--token-yellow-700);
+  --color-yellow-800: var(--token-yellow-800);
+  --color-yellow-850: var(--token-yellow-850);
+
+  --color-green-main: var(--token-green-main);
+  --color-green-50: var(--token-green-50);
+  --color-green-100: var(--token-green-100);
+  --color-green-200: var(--token-green-200);
+  --color-green-300: var(--token-green-300);
+  --color-green-400: var(--token-green-400);
+  --color-green-500: var(--token-green-500);
+  --color-green-600: var(--token-green-600);
+  --color-green-700: var(--token-green-700);
+  --color-green-800: var(--token-green-800);
+  --color-green-850: var(--token-green-850);
+
+  --color-orange-main: var(--token-orange-main);
+  --color-orange-50: var(--token-orange-50);
+  --color-orange-100: var(--token-orange-100);
+  --color-orange-200: var(--token-orange-200);
+  --color-orange-300: var(--token-orange-300);
+  --color-orange-400: var(--token-orange-400);
+  --color-orange-500: var(--token-orange-500);
+  --color-orange-600: var(--token-orange-600);
+  --color-orange-700: var(--token-orange-700);
+  --color-orange-800: var(--token-orange-800);
+  --color-orange-850: var(--token-orange-850);
+
+  --color-stroke: var(--stroke);
+
+  --color-page-bg: var(--token-gray-50);
+  --color-background: var(--token-gray-white);
+  --color-foreground: var(--token-gray-black);
+  --color-border: var(--token-gray-200);
+  --color-primary: var(--color-brand-main);
+  --color-accent: var(--token-peach-amber-main);
+  --color-accent-background: var(--token-peach-amber-100);
+  --color-muted: var(--token-gray-600);
+  --color-muted-background: var(--surface-muted-background);
+  --color-card: var(--surface-card);
+  --color-card-foreground: var(--surface-card-foreground);
+  --color-error: var(--token-red-main);
+  --color-error-background: var(--token-red-50);
+  --color-success: var(--token-green-main);
+  --color-success-background: var(--token-green-50);
+  --color-disabled: var(--token-gray-400);
+  --color-disabled-background: var(--token-gray-200);
+  --color-destructive: var(--surface-destructive);
+
+  /* Try not to use the tokens below. If you need any, remove them from below and move them above. */
+  /* To be removed */
+  --color-brand-brown: var(--token-brand-main);
+  --color-brand-deep: var(--token-brand-800);
+  --color-text-main: var(--token-gray-600);
+  --color-text-muted: var(--token-gray-500);
+  --color-surface-soft: var(--token-gray-white);
+  --color-popover: var(--surface-popover);
+  --color-popover-foreground: var(--surface-popover-foreground);
+  --color-primary-foreground: var(--surface-primary-foreground);
+  --color-secondary: var(--surface-secondary);
+  --color-secondary-foreground: var(--surface-secondary-foreground);
+  --color-accent-foreground: var(--surface-accent-foreground);
+  --color-destructive-foreground: var(--surface-destructive-foreground);
+  --color-input: var(--surface-input);
+  --color-ring: var(--surface-ring);
+  --color-chart-1: var(--surface-chart-1);
+  --color-chart-2: var(--surface-chart-2);
+  --color-chart-3: var(--surface-chart-3);
+  --color-chart-4: var(--surface-chart-4);
+  --color-chart-5: var(--surface-chart-5);
+  --color-sidebar: var(--surface-sidebar);
+  --color-sidebar-foreground: var(--surface-sidebar-foreground);
+  --color-sidebar-primary: var(--surface-sidebar-primary);
+  --color-sidebar-primary-foreground: var(--surface-sidebar-primary-foreground);
+  --color-sidebar-accent: var(--surface-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--surface-sidebar-accent-foreground);
+  --color-sidebar-border: var(--surface-sidebar-border);
+  --color-sidebar-ring: var(--surface-sidebar-ring);
+  --color-bg: var(--color-gray-white);
+  --color-fg-subtle: var(--color-gray-600);
+  --color-fg: var(--color-gray-700);
+  --color-raised: var(--color-gray-200);
+  --color-raised-fg: var(--color-gray-500);
+  --color-accent-main: var(--color-brand-main);
+  --color-accent-subtle: var(--color-brand-850);
+  --color-destructive: var(--color-red-600);
+  --color-destructive-fg: var(--color-gray-white);
+  --color-focus: var(--color-brand-400);
+  --font-sans: var(--font-default);
+}

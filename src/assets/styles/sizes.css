@@ -1,0 +1,21 @@
+:root {
+  --sizes-size-0: 0px;
+  --sizes-size-1: 1px;
+  --sizes-size-4: 4px;
+  --sizes-size-6: 6px;
+  --sizes-size-8: 8px;
+  --sizes-size-12: 12px;
+  --sizes-size-20: 20px;
+  --sizes-size-24: 24px;
+  --sizes-size-28: 28px;
+  --sizes-size-16: 16px;
+  --sizes-size-40: 40px;
+  --sizes-size-48: 48px;
+  --sizes-size-56: 56px;
+  --sizes-size-32: 32px;
+  --sizes-size-64: 64px;
+  --sizes-size-96: 96px;
+  --sizes-size-100: 100px;
+  --sizes-size-128: 128px;
+  --sizes-size-256: 256px;
+}

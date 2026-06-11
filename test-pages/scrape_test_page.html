@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scraping Test Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 2rem;
+        background: #fafafa;
+      }
+      .updates {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+      }
+      .update-item {
+        border-top: 1px solid #ddd;
+        padding: 0.75rem 0;
+      }
+      .update-item:first-child {
+        border-top: none;
+      }
+      .badge {
+        background: #dce6ff;
+        padding: 0.15rem 0.5rem;
+        font-size: 0.75rem;
+        border-radius: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Regulatory Change Feed – Scraping Test</h1>
+    <p><strong>Snapshot ID:</strong> <code id="snapshot-id"></code></p>
+    <p><strong>Generated at (UTC):</strong> <code id="generated-at"></code></p>
+
+    <section class="updates">
+      <h2>Latest Updates</h2>
+      <ul id="updates-list"></ul>
+    </section>
+
+    <script>
+      function generateUpdates() {
+        const topics = [
+          'Capital requirements',
+          'KYC / AML obligations',
+          'Reporting thresholds',
+          'Consumer protection rules',
+          'Data retention policy',
+          'Sanctions screening',
+          'Cross-border transfer rules',
+        ]
+
+        const now = new Date()
+        const snapshotId = Date.now()
+        const generatedAt = now.toISOString()
+
+        const updates = topics.map((topic, index) => {
+          const random = Math.random()
+          const changeLevel = Math.floor(random * 7) + 1
+          const pct = (random * 30).toFixed(1)
+          const direction = Math.random() > 0.5 ? 'increase' : 'decrease'
+
+          return {
+            id: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${index}-${snapshotId}`,
+            topic,
+            articleNumber: `Art-${100 + index}-${changeLevel}`,
+            changeSummary: `Regulatory threshold ${direction}d by ${pct}% (change level ${changeLevel}).`,
+          }
+        })
+
+        return { snapshotId, generatedAt, updates }
+      }
+
+      function renderUpdates() {
+        const { snapshotId, generatedAt, updates } = generateUpdates()
+
+        document.getElementById('snapshot-id').textContent = snapshotId
+        document.getElementById('generated-at').textContent = generatedAt
+
+        const list = document.getElementById('updates-list')
+        list.innerHTML = ''
+
+        updates.forEach((u, idx) => {
+          const li = document.createElement('li')
+          li.className = 'update-item'
+          li.dataset.updateId = u.id
+          li.dataset.updateIndex = idx
+          li.innerHTML = `
+          <div><span class="badge">Topic</span> ${u.topic}</div>
+          <div>Article: <code>${u.articleNumber}</code></div>
+          <p>${u.changeSummary}</p>
+        `
+          list.appendChild(li)
+        })
+      }
+
+      document.addEventListener('DOMContentLoaded', renderUpdates)
+    </script>
+  </body>
+</html>
