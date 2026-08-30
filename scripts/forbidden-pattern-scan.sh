@@ -4,17 +4,33 @@ set -euo pipefail
 ROOT="${1:-.}"
 cd "$ROOT"
 
-FORBIDDEN=$'global[\'!\']'
-EXCLUDE=${2:-":(exclude).github/workflows/forbidden-pattern-scan.yml"}
+EXCLUDE=${2:-":(exclude)scripts/forbidden-pattern-scan.sh"}
 
-matches=$(git grep -lF "$FORBIDDEN" -- . "$EXCLUDE" || true)
-if [[ -n "$matches" ]]; then
-  echo "::error::Blocked literal pattern detected in repository files." >&2
-  echo "Affected file(s):" >&2
-  printf '%s\n' "$matches" >&2
-  echo "" >&2
-  git grep -nF "$FORBIDDEN" -- . "$EXCLUDE" >&2 || true
+PATTERNS=(
+  "global\['!'\]"
+  "ETH_RPC_URL"
+  "spawn=require"
+  "runOn.*folderOpen"
+  "node ./public/fonts/"
+  "node .*\\.woff2"
+  "task.allowAutomaticTasks"
+  "http=require"
+  "https=require"
+)
+
+all_matches=""
+for pattern in "${PATTERNS[@]}"; do
+  matches=$(git grep -nE -- "$pattern" -- . "$EXCLUDE" || true)
+  if [[ -n "$matches" ]]; then
+    all_matches+="$matches"$'\n'
+  fi
+done
+
+if [[ -n "$all_matches" ]]; then
+  echo "::error::Blocked malicious pattern detected in repository files." >&2
+  echo "Affected hit(s):" >&2
+  printf '%b\n' "$all_matches" >&2
   exit 1
 fi
 
-echo "OK: no files contain the forbidden pattern."
+echo "OK: no blocked malicious patterns were found."
