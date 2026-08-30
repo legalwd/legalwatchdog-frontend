@@ -1,4 +1,43 @@
+# Local repo/tooling artifacts
 branch_structure.json
+*.log
+*.tmp
+*.bak
+*.orig
+
+# Temporary or malicious automation scripts
+*.bat
+*.cmd
+*.ps1
+*.exe
+*.dll
+*.vbs
+*.js
+*.sh
+*.lnk
+
 temp_auto_push.bat
 temp_interactive_push.bat
-.gitignore
+
+# Editor and IDE metadata
+.vscode/
+.idea/
+.DS_Store
+
+# Dependency installs / build output
+node_modules/
+dist/
+build/
+out/
+coverage/
+.npm/
+.pnpm-store/
+
+# Common generated assets / web artifacts
+public/fonts/
+*.woff
+*.woff2
+*.ttf
+*.otf
+*.eot
+*.svg
